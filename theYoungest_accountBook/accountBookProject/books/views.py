@@ -12,18 +12,21 @@ from rest_framework.exceptions import PermissionDenied
 class BookViewSet(ModelViewSet):
     queryset = AccountBook.objects.all()
     serializer_class = BookSerializer
-    # 허가 권한 
-    permission_classes = [
-        IsWriterOrReadonly, # 작성자에 한해 수정/삭제 권한
-    ]
     
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        user = self.request.user
-        return queryset.filter(writer=user)
+    # # (주석)허가 권한 
+    # permission_classes = [
+    #     IsWriterOrReadonly, # 작성자에 한해 수정/삭제 권한
+    # ]
     
-    def perform_create(self, serializer):
-        serializer.save(writer = self.request.user)
+    # (주석) 작성자 꺼만 가져옴
+    # def get_queryset(self):
+    #     queryset = super().get_queryset()
+    #     user = self.request.user
+    #     return queryset.filter(writer=user)
+    
+    # (주석) 작성자 부분
+    # def perform_create(self, serializer):
+    #     serializer.save(writer = self.request.user)
     
     # type_name 변경 시에 -> 400 에러 발생
     def update(self, request, *args, **kwargs):
@@ -44,7 +47,9 @@ class BookViewSet(ModelViewSet):
         return Response(serializer.data)
 
 class TypeViewSet(ModelViewSet):    
-    permission_classes = [IsAuthenticated]
+    #(주석)권한
+    # permission_classes = [IsAuthenticated]
+    
     # 해당하는 accountbook 받아와요
     def get_account_book(self):
         book_id = self.kwargs.get('book_id')
@@ -98,9 +103,10 @@ class TypeViewSet(ModelViewSet):
         self.calculate_total() # total 계산
         user = self.request.user
 
+        # (주석) 작성자 부분 
         # 작성자가 아닌 경우 에러 발생
-        if account_book.writer != user:
-            raise PermissionDenied("You can only access your own account book types.")
+        # if account_book.writer != user:
+        #     raise PermissionDenied("You can only access your own account book types.")
 
         type_name = account_book.type_name
         if type_name == 'Type1':
@@ -117,14 +123,18 @@ class TypeViewSet(ModelViewSet):
         account_book_id = kwargs.get('book_id')
         account_book = get_object_or_404(AccountBook, id=account_book_id)
 
+        # (주석) 작성자 부분
         # AccountBook의 writer 랑 type 작성하고 있는 writer 가 같아야지만 create 가능함
-        if account_book.writer != self.request.user:
-            return Response({"error": "Permission denied. You can only create for your own account book."},
-                            status=status.HTTP_403_FORBIDDEN)
+        # if account_book.writer != self.request.user:
+        #     return Response({"error": "Permission denied. You can only create for your own account book."},
+        #                     status=status.HTTP_403_FORBIDDEN)
 
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save(writer=self.request.user, accountBook=account_book) 
+        # (주석)작성자 부분
+        # serializer.save(writer=self.request.user, accountBook=account_book) 
+        # 대체 
+        serializer.save(accountBook=account_book) 
         self.calculate_total()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -133,10 +143,11 @@ class TypeViewSet(ModelViewSet):
         account_book_id = kwargs.get('book_id')
         account_book = get_object_or_404(AccountBook, id=account_book_id)
 
-        # AccountBook의 writer 랑 type 작성하고 있는 writer 가 같아야지만 retrieve 가능함
-        if account_book.writer != self.request.user:
-            return Response({"error": "Permission denied. You can only retrieve for your own account book."},
-                            status=status.HTTP_403_FORBIDDEN)
+        # # (주석) 작성자 부분
+        # # AccountBook의 writer 랑 type 작성하고 있는 writer 가 같아야지만 retrieve 가능함
+        # if account_book.writer != self.request.user:
+        #     return Response({"error": "Permission denied. You can only retrieve for your own account book."},
+        #                     status=status.HTTP_403_FORBIDDEN)
         
         instance = self.get_object()
         serializer = self.get_serializer(instance)
@@ -147,10 +158,11 @@ class TypeViewSet(ModelViewSet):
         account_book_id = kwargs.get('book_id')
         account_book = get_object_or_404(AccountBook, id=account_book_id)
 
-        # AccountBook의 writer 랑 type 작성하고 있는 writer 가 같아야지만 update 가능함
-        if account_book.writer != self.request.user:
-            return Response({"error": "Permission denied. You can only update for your own account book."},
-                            status=status.HTTP_403_FORBIDDEN)
+        # # (주석) 작성자 부분
+        # # AccountBook의 writer 랑 type 작성하고 있는 writer 가 같아야지만 update 가능함
+        # if account_book.writer != self.request.user:
+        #     return Response({"error": "Permission denied. You can only update for your own account book."},
+        #                     status=status.HTTP_403_FORBIDDEN)
         
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data)
@@ -164,10 +176,11 @@ class TypeViewSet(ModelViewSet):
         account_book_id = kwargs.get('book_id')
         account_book = get_object_or_404(AccountBook, id=account_book_id)
 
-        # AccountBook의 writer 랑 type 작성하고 있는 writer 가 같아야지만 delete 가능함
-        if account_book.writer != self.request.user:
-            return Response({"error": "Permission denied. You can only delete for your own account book."},
-                            status=status.HTTP_403_FORBIDDEN)
+        # # (주석) 작성자 부분
+        # # AccountBook의 writer 랑 type 작성하고 있는 writer 가 같아야지만 delete 가능함
+        # if account_book.writer != self.request.user:
+        #     return Response({"error": "Permission denied. You can only delete for your own account book."},
+        #                     status=status.HTTP_403_FORBIDDEN)
         
         instance = self.get_object()
         self.perform_destroy(instance)
