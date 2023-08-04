@@ -253,7 +253,7 @@ const Write = () => {
   };
 
   const handleSubmitBoxClick = () => {
-    navigate("/save");
+    navigate("/read");
   };
 
   const handleImageUpload = (event, imgRef) => {
