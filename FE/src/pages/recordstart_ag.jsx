@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import axios from "axios"; 
 
 const Container = styled.div`
   display: flex;
@@ -161,6 +162,7 @@ const Writingtext = styled.div`
   line-height: normal;
 `;
 const Recordstart_ag = () => {
+  
   const navigate = useNavigate();
   const navigateToRead = () => {
     navigate("/read");

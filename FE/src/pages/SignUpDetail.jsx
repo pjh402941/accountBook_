@@ -191,19 +191,19 @@ const SignUpDetail = () => {
           </Person>
         </TitleBox>
         <InputBox>
-          <Input type="text" placeholder="이름"></Input>
+          <Input type="text" placeholder="이름" id="name"></Input>
         </InputBox>
         <InputBox>
-          <Input type="text" placeholder="닉네임"></Input>
+          <Input type="text" placeholder="닉네임" id="nickname"></Input>
         </InputBox>
         <InputBox>
-          <Input type="text" placeholder="아이디"></Input>
+          <Input type="text" placeholder="아이디" id="id"></Input>
         </InputBox>
         <InputBox>
-          <Input type="text" placeholder="비밀번호"></Input>
+          <Input type="text" placeholder="비밀번호" id="pw"></Input>
         </InputBox>
         <InputBox>
-          <Input type="phone" placeholder="전화번호"></Input>
+          <Input type="phone" placeholder="전화번호" id="number"></Input>
         </InputBox>
         <InputBox>
           {/* 년도 드롭다운 */}
