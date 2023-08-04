@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Container = styled.div`
   display: flex;
@@ -149,6 +150,11 @@ const SignUpDetail = () => {
   const [day, setDay] = useState("");
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
+  const [name, setName] = useState("");
+  const [nickname, setNickname] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
 
   // 일자, 월, 년도 배열 생성
   const days = Array.from({ length: 31 }, (_, i) => i + 1);
@@ -160,12 +166,36 @@ const SignUpDetail = () => {
 
   const navigate = useNavigate();
 
-  const onClick = () => {
-    navigate(`/Login`);
-  };
+  // const onClick = () => {
+  //   navigate(`/Login`);
+  // };
 
   const onClickBtn = () => {
     navigate(-1); // 바로 이전 페이지로 이동, '/main' 등 직접 지정도 당연히 가능
+  };
+
+  const onClick = () => {
+    // 사용자 입력 데이터를 서버로 전송하는 로직을 추가합니다.
+    const userData = {
+      name: name,
+      nickname: nickname,
+      id: username,
+      password: password,
+      phone: phone,
+      birth: `${year}-${month}-${day}`, // 서버에서 년월일을 합쳐서 처리할 수 있도록 전달합니다.
+    };
+
+    // Replace 'your-api-endpoint' with your actual backend API endpoint for user registration
+    axios
+      .post("http://127.0.0.1:8000/signup/", userData)
+      .then((response) => {
+        console.log("회원가입 성공:", response.data);
+        navigate("/Login"); // 회원가입 성공 시 로그인 페이지로 이동하도록 설정
+      })
+      .catch((error) => {
+        console.error("회원가입 실패:", error);
+        // 오류 처리를 원하는 대로 구현하세요.
+      });
   };
 
   return (
@@ -191,19 +221,39 @@ const SignUpDetail = () => {
           </Person>
         </TitleBox>
         <InputBox>
-          <Input type="text" placeholder="이름"></Input>
+          <Input
+            type="text"
+            placeholder="이름"
+            onChange={(e) => setName(e.target.value)}
+          />
         </InputBox>
         <InputBox>
-          <Input type="text" placeholder="닉네임"></Input>
+          <Input
+            type="text"
+            placeholder="닉네임"
+            onChange={(e) => setNickname(e.target.value)}
+          />
         </InputBox>
         <InputBox>
-          <Input type="text" placeholder="아이디"></Input>
+          <Input
+            type="text"
+            placeholder="아이디"
+            onChange={(e) => setUsername(e.target.value)}
+          />
         </InputBox>
         <InputBox>
-          <Input type="text" placeholder="비밀번호"></Input>
+          <Input
+            type="text"
+            placeholder="비밀번호"
+            onChange={(e) => setPassword(e.target.value)}
+          />
         </InputBox>
         <InputBox>
-          <Input type="phone" placeholder="전화번호"></Input>
+          <Input
+            type="phone"
+            placeholder="전화번호"
+            onChange={(e) => setPhone(e.target.value)}
+          />
         </InputBox>
         <InputBox>
           {/* 년도 드롭다운 */}

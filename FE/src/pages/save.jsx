@@ -49,6 +49,19 @@ const Body = styled.div`
   margin-top: 59px;
 `;
 
+const Clip1 = styled.img`
+  width: 46px;
+  position: absolute;
+  top: 82px;
+  left: 46%;
+`;
+const Clip2 = styled.img`
+  width: 46px;
+  position: absolute;
+  top: 510px;
+  left: 44%;
+`;
+
 const Capture = styled.img`
   border: 1.827px solid #55877e;
   border-radius: 3.015px;
@@ -112,7 +125,7 @@ const ShareText = styled.p`
 const Save = () => {
   const [popup, setPopup] = useState(false);
   const location = useLocation();
-  const [capturedImage, setCapturedImage] = useState(null); // capturedImage 상태 선언
+  const [capturedImage, setCapturedImage] = useState(null);
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -129,36 +142,28 @@ const Save = () => {
   };
 
   const handleShareBoxClick = () => {
-    // Link 컴포넌트를 사용하여 /share 경로로 이동하고 capturedImage를 상태로 전달합니다.
     navigate("/share", { state: { capturedImage: capturedImage } });
   };
 
-  // 사용자가 이미지를 저장하는 함수
   const handleSaveImage = () => {
-    // 캡처한 이미지를 Blob 형태로 변환합니다.
     fetch(capturedImage)
       .then((res) => res.blob())
       .then((blob) => {
-        // Blob을 URL 객체로 생성합니다.
         const url = URL.createObjectURL(blob);
 
-        // 새로운 링크 엘리먼트를 만들고 이미지 URL을 할당합니다.
         const link = document.createElement("a");
         link.href = url;
 
-        // 다운로드될 파일의 이름을 설정합니다.
         link.download = "captured_image.png";
 
-        // 링크를 클릭하여 이미지를 다운로드합니다.
         link.click();
 
-        // 다운로드가 완료되면 URL 객체를 해제합니다.
         URL.revokeObjectURL(url);
       });
   };
 
   const onClickBtn = () => {
-    navigate(-1); // 바로 이전 페이지로 이동, '/main' 등 직접 지정도 당연히 가능
+    navigate(-1);
   };
 
   return (
@@ -173,7 +178,9 @@ const Save = () => {
           />
         </Header>
         <Body>
+          <Clip1 src="images/clip1.png"></Clip1>
           {capturedImage && <Capture src={capturedImage} width="191px" />}
+          <Clip2 src="images/clip2.png"></Clip2>
           <ActionWrapper onClick={showPopup}>
             <SaveBox onClick={() => handleSaveImage()}>
               {" "}

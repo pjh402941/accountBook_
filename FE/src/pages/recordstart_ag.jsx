@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Container = styled.div`
   display: flex;
@@ -39,6 +40,13 @@ const Backbutton = styled.div`
   margin-left: -90%;
   padding-top: 15px;
   cursor: pointer;
+`;
+
+const Logoutbutton = styled.img`
+  width: 24px;
+  position: absolute;
+  top: 13px;
+  right: 3%;
 `;
 
 const Mainimg = styled.div`
@@ -173,6 +181,20 @@ const Recordstart_ag = () => {
     navigate(-1); // 바로 이전 페이지로 이동, '/main' 등 직접 지정도 당연히 가능
   };
 
+  const onClicklogout = () => {
+    // Replace 'your-api-endpoint' with your actual backend API endpoint for user registration
+    axios
+      .post("http://127.0.0.1:8000/rest-auth/logout/")
+      .then((response) => {
+        console.log("로그아웃 성공:", response.data);
+        navigate("/"); // 회원가입 성공 시 로그인 페이지로 이동하도록 설정
+      })
+      .catch((error) => {
+        console.error("로그아웃 실패:", error);
+        // 오류 처리를 원하는 대로 구현하세요.
+      });
+  };
+
   return (
     <Container>
       <BodyWrapper>
@@ -184,6 +206,10 @@ const Recordstart_ag = () => {
               width="16px"
             />
           </Backbutton>
+          <Logoutbutton
+            onClick={onClicklogout}
+            src={`${process.env.PUBLIC_URL}/images/로그아웃.png`}
+          />
         </Topbar>
 
         <Mainimg>
