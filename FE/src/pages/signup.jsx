@@ -204,6 +204,7 @@ const Done = styled.button`
 `;
 
 const SignUp = () => {
+
   const navigate = useNavigate();
 
   const onClick = () => {
