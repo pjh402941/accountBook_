@@ -8,19 +8,29 @@ TYPE_CHOICES = (
 )
 
 # main account book
+# class AccountBook(models.Model):
+#     title = models.CharField(max_length=128)
+#     date = models.DateField(verbose_name="날짜")
+#     writer = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+#     type_name = models.CharField(verbose_name="type명", choices=TYPE_CHOICES, default='Type1', max_length=10)
+#     total = models.IntegerField(default=0)
+
+#     def __str__(self):
+#         return str(self.date)
+    
+#     class Meta:
+#         # 'date' 필드를 기준으로 중복 방지
+#         unique_together = ['date']
+
+# 프론트 전용 
 class AccountBook(models.Model):
-    title = models.CharField(max_length=128)
     date = models.DateField(verbose_name="날짜")
-    writer = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    type_name = models.CharField(verbose_name="type명", choices=TYPE_CHOICES, default='Type1', max_length=10)
-    total = models.IntegerField(default=0)
+    category = models.TextField(default="카테고리", null=True)
+    memo = models.TextField(default="소비내역", null=True)
+    money = models.IntegerField(default=0)
 
     def __str__(self):
         return str(self.date)
-    
-    class Meta:
-        # 'date' 필드를 기준으로 중복 방지
-        unique_together = ['date']
 
 # Type1
 class Type1(models.Model):

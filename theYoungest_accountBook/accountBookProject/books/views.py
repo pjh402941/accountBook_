@@ -29,22 +29,22 @@ class BookViewSet(ModelViewSet):
     #     serializer.save(writer = self.request.user)
     
     # type_name 변경 시에 -> 400 에러 발생
-    def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        type_name = instance.type_name
+    # def update(self, request, *args, **kwargs):
+    #     instance = self.get_object()
+    #     type_name = instance.type_name
 
-        partial = kwargs.pop('partial', False)
-        if not partial:
-            request.data.pop('type_name', None)
+    #     partial = kwargs.pop('partial', False)
+    #     if not partial:
+    #         request.data.pop('type_name', None)
 
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
+    #     serializer = self.get_serializer(instance, data=request.data, partial=partial)
+    #     serializer.is_valid(raise_exception=True)
+    #     self.perform_update(serializer)
 
-        if type_name != serializer.instance.type_name:
-            return Response({"error": "Updating 'type_name' is not allowed."}, status=status.HTTP_400_BAD_REQUEST)
+    #     if type_name != serializer.instance.type_name:
+    #         return Response({"error": "Updating 'type_name' is not allowed."}, status=status.HTTP_400_BAD_REQUEST)
 
-        return Response(serializer.data)
+    #     return Response(serializer.data)
 
 class TypeViewSet(ModelViewSet):    
     #(주석)권한

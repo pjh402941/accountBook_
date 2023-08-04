@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Container = styled.div`
   display: flex;
@@ -134,7 +135,7 @@ const Join = styled.div`
 const Login = () => {
   const navigate = useNavigate();
 
-  const onClick = () => {
+  const onClickSignup = () => {
     navigate(`/SignUp`);
   };
 
@@ -144,26 +145,46 @@ const Login = () => {
 
   const [loginId, setLoginId] = useState("");
   const [loginPw, setLoginPw] = useState("");
-  const [loginButtonDisabled, setLoginButtonDisabled] = useState(true);
+  // const [loginButtonDisabled, setLoginButtonDisabled] = useState(true);
 
-  const handleLoginIdChange = (e) => {
-    const value = e.target.value;
-    setLoginId(value);
-    updateLoginButtonState(value, loginPw);
-  };
+  // const handleLoginIdChange = (e) => {
+  //   const value = e.target.value;
+  //   setLoginId(value);
+  //   updateLoginButtonState(value, loginPw);
+  // };
 
-  const handleLoginPwChange = (e) => {
-    const value = e.target.value;
-    setLoginPw(value);
-    updateLoginButtonState(loginId, value);
-  };
+  // const handleLoginPwChange = (e) => {
+  //   const value = e.target.value;
+  //   setLoginPw(value);
+  //   updateLoginButtonState(loginId, value);
+  // };
 
-  const updateLoginButtonState = (id, pw) => {
-    setLoginButtonDisabled(id.length === 0 || pw.length === 0);
-  };
+  // const updateLoginButtonState = (id, pw) => {
+  //   setLoginButtonDisabled(id.length === 0 || pw.length === 0);
+  // };
 
-  const handleLogin = () => {
+  /*const handleLogin = () => {
     navigate(`/Recordstart_ag`);
+  };*/
+
+  const onClick = () => {
+    // 사용자 입력 데이터를 서버로 전송하는 로직을 추가합니다.
+    const userData = {
+      username: loginId,
+      password: loginPw,
+    };
+
+    // Replace 'your-api-endpoint' with your actual backend API endpoint for user registration
+    axios
+      .post("http://127.0.0.1:8000/rest-auth/login/", userData)
+      .then((response) => {
+        console.log("로그인 성공:", response.data);
+        navigate("/Recordstart_ag"); // 회원가입 성공 시 로그인 페이지로 이동하도록 설정
+      })
+      .catch((error) => {
+        console.error("로그인 실패:", error);
+        // 오류 처리를 원하는 대로 구현하세요.
+      });
   };
 
   return (
@@ -193,19 +214,19 @@ const Login = () => {
             type="text"
             placeholder="아이디"
             value={loginId}
-            onChange={handleLoginIdChange}
+            // onChange={handleLoginIdChange}
+            onChange={(e) => setLoginId(e.target.value)}
           ></IdPwInput>
           <IdPwInput
             type="password"
             placeholder="비밀번호"
             value={loginPw}
-            onChange={handleLoginPwChange}
+            //onChange={handleLoginPwChange}
+            onChange={(e) => setLoginPw(e.target.value)}
           ></IdPwInput>
         </LoginInput>
-        <LoginBox onClick={handleLogin} disabled={loginButtonDisabled}>
-          로그인
-        </LoginBox>
-        <Join onClick={onClick}>아직 회원이 아니신가요? 회원가입</Join>
+        <LoginBox onClick={onClick}>로그인</LoginBox>
+        <Join onClick={onClickSignup}>아직 회원이 아니신가요? 회원가입</Join>
       </BodyWrapper>
     </Container>
   );

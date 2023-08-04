@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
+import axios from "axios";
 
 const Container = styled.div`
   display: flex;
@@ -217,6 +218,10 @@ const LayoutIcon = styled.img`
 `;
 
 const Writeform2 = () => {
+  const [category, setCategory] = useState("");
+  const [memo, setMemo] = useState("");
+  const [money, setMoney] = useState("");
+
   const navigate = useNavigate();
 
   const onClickBtn = () => {
@@ -227,10 +232,55 @@ const Writeform2 = () => {
     navigate("/save");
   };
 
+  const handleCategory = (e) => {
+    setCategory(e.target.value);
+  };
+
+  const getFormattedDate2 = () => {
+    const today = moment().format("YYYY-MM-DD");
+    return today;
+  };
+
   // 날짜를 형식에 맞게 포맷하여 가져오는 함수
   const getFormattedDate = () => {
     const today = moment().format("YYYY . MM . DD ddd");
     return today;
+  };
+
+  const handleSubmitClick = async () => {
+    try {
+      // 폼에서 입력된 데이터로 새로운 포스트 객체를 생성합니다.
+      const newPost = {
+        date: getFormattedDate2(),
+        memo: memo,
+        category: category,
+        money: money,
+        // 필요에 따라 이미지 URL들을 배열로 추가할 수 있습니다. 예: images: [img1URL, img2URL, img3URL]
+      };
+
+      // axios를 사용하여 새로운 포스트를 서버로 보냅니다. HTTP POST 요청을 사용합니다.
+      // 서버로 전송하기 전에 불필요한 순환 참조를 없애기 위해 이미지 업로드 부분을 제외하고 전송합니다.
+      const { date, memo, category, money } = newPost; // 이미지 관련 속성을 제외하고 가져옵니다.
+
+      const response = await axios.post("https://127.0.0.1:8000/books", {
+        date,
+        memo,
+        category,
+        money,
+      });
+
+      // 만약 포스트가 성공적으로 생성되었다면, 다른 페이지로 이동시킵니다.
+      if (response.status === 201) {
+        navigate("/save"); // "/success"를 원하는 성공 페이지의 URL로 바꿔주세요.
+        console.log("포스트 생성");
+      } else {
+        console.error("포스트 생성에 실패했습니다.");
+        // 실패했을 경우에 대한 에러 처리 또는 사용자에게 에러 메시지를 보여줍니다.
+      }
+    } catch (error) {
+      console.error("포스트 생성 중 에러 발생:", error);
+      // 에러 처리 또는 사용자에게 에러 메시지를 보여줍니다.
+    }
   };
 
   return (
@@ -248,21 +298,31 @@ const Writeform2 = () => {
           <form>
             <FormHeader>
               <Date>{getFormattedDate()}</Date>
-              <SubmitBox onClick={handleSubmitBoxClick}>
+              <SubmitBox onClick={handleSubmitClick} type="submit">
                 <SubmitIcon
-                  onClick={handleSubmitBoxClick}
+                  onClick={handleSubmitClick}
+                  type="submit"
                   src="images/저장.png"
                   alt="save"
                   width="24px"
                 ></SubmitIcon>
-                <SubmitButton onClick={handleSubmitBoxClick} type="submit">
+                <SubmitButton onClick={handleSubmitClick} type="submit">
                   저장
                 </SubmitButton>
               </SubmitBox>
             </FormHeader>
             <FormContent>
               <SelectBox>
-                <Select>
+                <Select onChange={handleCategory}>
+                  {/* <option disabled hidden selected>
+                    카테고리
+                  </option> */}
+                  <option value="식비">식비</option>
+                  <option value="쇼핑">쇼핑</option>
+                  <option value="교통비">교통비</option>
+                  <option value="기타">기타</option>
+                </Select>
+                {/* <Select>
                   <option disabled hidden selected>
                     카테고리
                   </option>
@@ -324,20 +384,25 @@ const Writeform2 = () => {
                   <option value="2">쇼핑</option>
                   <option value="3">교통비</option>
                   <option value="4">기타</option>
-                </Select>
-                <Select>
-                  <option disabled hidden selected>
-                    카테고리
-                  </option>
-                  <option value="1">식비</option>
-                  <option value="2">쇼핑</option>
-                  <option value="3">교통비</option>
-                  <option value="4">기타</option>
-                </Select>
+                </Select> */}
               </SelectBox>
               <Line2 src="images/Line 9.png"></Line2>
               <WhiteBoxArea>
                 <WhiteBox>
+                  <Input
+                    placeholder="소비 내역"
+                    type="text"
+                    value={memo}
+                    onChange={(e) => setMemo(e.target.value)}
+                  ></Input>
+                  <Input
+                    placeholder="금액"
+                    type="number"
+                    value={money}
+                    onChange={(e) => setMoney(e.target.value)}
+                  ></Input>
+                </WhiteBox>
+                {/* <WhiteBox>
                   <Input placeholder="소비 내역"></Input>
                   <Input placeholder="금액" type="number"></Input>
                 </WhiteBox>
@@ -364,11 +429,7 @@ const Writeform2 = () => {
                 <WhiteBox>
                   <Input placeholder="소비 내역"></Input>
                   <Input placeholder="금액" type="number"></Input>
-                </WhiteBox>
-                <WhiteBox>
-                  <Input placeholder="소비 내역"></Input>
-                  <Input placeholder="금액" type="number"></Input>
-                </WhiteBox>
+                </WhiteBox> */}
               </WhiteBoxArea>
             </FormContent>
           </form>

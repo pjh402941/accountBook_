@@ -3,6 +3,7 @@ import styled from "styled-components";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
 import MDEditor from "@uiw/react-md-editor";
+import axios from "axios";
 
 const Container = styled.div`
   display: flex;
@@ -236,6 +237,7 @@ const LayoutIcon = styled.img`
 const Write = () => {
   const navigate = useNavigate();
   const [mdinfo, setMD] = useState("");
+  const [title, setTitle] = useState("");
   const imageInputRef1 = useRef(null);
   const imageInputRef2 = useRef(null);
   const imageInputRef3 = useRef(null);
@@ -245,8 +247,13 @@ const Write = () => {
     return today;
   };
 
+  const getFormattedDate2 = () => {
+    const today = moment().format("YYYY-MM-DD");
+    return today;
+  };
+
   const handleSubmitBoxClick = () => {
-    navigate("/read");
+    navigate("/save");
   };
 
   const handleImageUpload = (event, imgRef) => {
@@ -270,6 +277,39 @@ const Write = () => {
     event.stopPropagation();
   };
 
+  const handleSubmitClick = async () => {
+    try {
+      // 폼에서 입력된 데이터로 새로운 포스트 객체를 생성합니다.
+      const newPost = {
+        title: title, // title은 포스트의 제목을 담는 상태 변수입니다.
+        content: mdinfo, // mdinfo는 Markdown 내용을 담는 상태 변수입니다.
+
+        // 필요에 따라 이미지 URL들을 배열로 추가할 수 있습니다. 예: images: [img1URL, img2URL, img3URL]
+      };
+
+      // axios를 사용하여 새로운 포스트를 서버로 보냅니다. HTTP POST 요청을 사용합니다.
+      // 서버로 전송하기 전에 불필요한 순환 참조를 없애기 위해 이미지 업로드 부분을 제외하고 전송합니다.
+      const { title, content } = newPost; // 이미지 관련 속성을 제외하고 가져옵니다.
+
+      const response = await axios.post("https://127.0.0.1:8000/books", {
+        title: title, // title은 포스트의 제목을 담는 상태 변수입니다.
+        date: getFormattedDate2(),
+        type_name: "Type1",
+      });
+
+      // 만약 포스트가 성공적으로 생성되었다면, 다른 페이지로 이동시킵니다.
+      if (response.status === 201) {
+        navigate("/save"); // "/success"를 원하는 성공 페이지의 URL로 바꿔주세요.
+      } else {
+        console.error("포스트 생성에 실패했습니다.");
+        // 실패했을 경우에 대한 에러 처리 또는 사용자에게 에러 메시지를 보여줍니다.
+      }
+    } catch (error) {
+      console.error("포스트 생성 중 에러 발생:", error);
+      // 에러 처리 또는 사용자에게 에러 메시지를 보여줍니다.
+    }
+  };
+
   return (
     <Container id="write-component">
       <BodyWrapper>
@@ -291,7 +331,7 @@ const Write = () => {
                 width="24px"
                 onClick={handleSubmitBoxClick}
               />
-              <SubmitButton type="submit" onClick={handleSubmitBoxClick}>
+              <SubmitButton type="submit" onClick={handleSubmitClick}>
                 저장
               </SubmitButton>
             </SubmitBox>
@@ -301,6 +341,7 @@ const Write = () => {
               name="title"
               placeholder="제목을 입력하세요"
               maxLength="30"
+              onChange={setTitle}
             />
             <Content name="content">
               <div className="markarea">
