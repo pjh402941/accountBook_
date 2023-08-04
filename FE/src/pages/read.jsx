@@ -11,7 +11,6 @@ const Container = styled.div`
   position: relative;
   text-align: center;
   background-color: #f5f0e4;
-  overflow: auto;
   -ms-overflow-style: none;
   font-family: "Inter", sans-serif;
 
@@ -29,10 +28,6 @@ const Container = styled.div`
 const BodyWrapper = styled.div`
   flex: 1;
   overflow: auto;
-  -ms-overflow-style: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
 `;
 
 const Header = styled.header`
@@ -53,17 +48,6 @@ const Body = styled.div`
   margin: 0 20px;
   margin-top: 59px;
 `;
-const Clip1 = styled.img`
-  width: 46px;
-  position: absolute;
-  top: 82px;
-`;
-const Clip3 = styled.img`
-  width: 46px;
-  position: absolute;
-  top: 163px;
-  left: 40%;
-`;
 
 const FormHeader = styled.div`
   border-radius: 6px;
@@ -74,22 +58,17 @@ const FormHeader = styled.div`
   padding: 8px 13px 8px 10px;
 `;
 const SubmitIcon = styled.div`
-  width: 236px;
-  height: 52px;
+  display: inline-block;
+  box-sizing: border-box;
+  float: right;
+  width: 20%;
+  height: 56px;
+  margin-top: 3px;
+  background-color: white;
   border-radius: 6px;
-  background: #55877e;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 10px;
-  margin: 0 auto;
-  margin-top: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 12px;
+  padding: 16px 2%;
+  font-family: Inter;
 `;
-const SubmitImage = styled.img``;
 
 const Date = styled.div`
   display: inline-block;
@@ -288,15 +267,21 @@ const Read = () => {
           />
         </Header>
         <Body>
+          <SubmitIcon
+            onClick={handleSubmitBoxClick}
+            src="images/저장.png"
+            alt="save"
+            width="24px"
+          >
+            저장공유이동
+          </SubmitIcon>
           <form>
-            <Clip1 src="images/clip1.png"></Clip1>
             <FormHeader>
               <Date>2023 . 05 . 15 MON</Date>
               <UpdateBox onClick={handleUpdateBoxClick}>
                 <UpdateButton>수정하기</UpdateButton>
               </UpdateBox>
             </FormHeader>
-            <Clip3 src="images/clip3.png"></Clip3>
             <FormContentWrapper ref={captureContainerRef}>
               <FormContent>
                 <Title name="title" />
@@ -326,15 +311,6 @@ const Read = () => {
             </FormContentWrapper>
           </form>
           <Bottom src="images/Bottom.png"></Bottom>
-          <SubmitIcon
-            onClick={handleSubmitBoxClick}
-            src="images/저장.png"
-            alt="save"
-            width="24px"
-          >
-            <SubmitImage src="images/이미지0.png" width="24px"></SubmitImage>
-            이미지로 저장 / 공유하기
-          </SubmitIcon>
         </Body>
       </BodyWrapper>
     </Container>

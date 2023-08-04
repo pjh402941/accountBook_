@@ -45,18 +45,6 @@ const Body = styled.div`
   margin: 0 20px;
   margin-top: 59px;
 `;
-const Clip1 = styled.img`
-  width: 46px;
-  position: absolute;
-  top: 82px;
-  left: 46%;
-`;
-const Clip2 = styled.img`
-  width: 46px;
-  position: absolute;
-  top: 544px;
-  left: 44%;
-`;
 
 const Capture = styled.img`
   border: 1.827px solid #55877e;
@@ -143,11 +131,9 @@ const Share = () => {
           />
         </Header>
         <Body>
-          <Clip1 src="images/clip1.png"></Clip1>
           {capturedImageUrl && (
             <Capture src={capturedImageUrl} alt="Captured" />
           )}
-          <Clip2 src="images/clip2.png"></Clip2>
           <ActionWrapper>
             <ShareButton>공유</ShareButton>
             <ShareBox>
